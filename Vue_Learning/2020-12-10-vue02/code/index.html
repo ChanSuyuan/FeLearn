@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // 小步验证
+      // 小步快走
+      console.log(Vue);
+      // 组件 -》 函数很类似
+      // 函数思想很类似
+      // 注册组件
+      // 全局注册
+      // 封装
+      // 局部注册组件
+      // 注意点
+      // 1. 必须要有一个 root element
+      // 2.
+      const Bar = {
+        template: `<div>Bar Component</div>`,
+      };
+      Vue.component("Foo", {
+        components: {
+          Bar,
+        },
+        data() {
+          return {
+            count: 1,
+          };
+          // 引用类型
+        },
+        template: `<div>Foo Component
+        {{count}}
+        <button @click="count++">click</button>
+            <Bar></Bar>
+        </div>`,
+      });
+
+      // app -> 根组件
+      // 根组件 只会有一个
+      const app = new Vue({
+        el: "#app",
+        data: {
+          msg: "hello",
+        },
+        template: `<div>
+            {{msg}}
+            <Foo></Foo>
+            <Foo></Foo>
+        </div>`,
+      });
+    </script>
+  </body>
+</html>

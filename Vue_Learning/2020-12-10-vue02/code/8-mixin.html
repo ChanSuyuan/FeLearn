@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // 需求 实现一个 鼠标坐标的逻辑
+      // 不止在 这个组件内用，有可能在别的组件内 都会用到
+      // mixin
+      // v-bind v-show v-if -> 内置指令
+      // 
+
+      // opts
+      const moveMixin = {
+        data() {
+          return {
+            x: 0,
+            y: 0,
+          };
+        },
+        methods: {
+          handleMousemove(e) {
+            this.x = e.pageX;
+            this.y = e.pageY;
+          },
+        },
+        mounted() {
+          window.addEventListener("mousemove", this.handleMousemove);
+        },
+
+        beforeDestroy() {
+          window.removeEventListener("mousemove", this.handleMousemove);
+        },
+      };
+
+      // 继承 -》 vue3 被干掉了
+      // 不需要了解
+      // vue3 -> extends
+      // oop -> 多用组合 少用继承
+      // vue3
+
+      const Foo = {
+        // otherA -> x,y
+        // otherB -> x,y
+        // 命名冲突的问题
+        // x,y 来自哪来
+        // 来源不清晰的点
+        // vue3
+        mixins: [moveMixin, otherA, otherB],
+        template: `<div>Foo {{x}} - {{y}}</div>`,
+      };
+
+      const app = new Vue({
+        el: "#app",
+        components: {
+          Foo,
+        },
+        data: {
+          msg: "hello",
+        },
+        template: `<div>
+          <Foo></Foo>
+        </div>`,
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // fn -> 参数
+
+      // props. 给组件传参数
+      // age -> type -> number
+      // type -> 定义类型
+      // default 定义默认值
+      // validator 自定义校验规则
+      // 数组
+
+      const Foo = {
+        props: {
+          age: {
+            default: 20,
+            type: Number,
+            required: true,
+          },
+          title: {
+            type: String,
+            // required: true, // 必须的
+            validator(v) {
+              console.log(v);
+              // 验证规则
+              // 如果你返回 true 就是验证成功
+              // element3 -> button -> size -> small | large
+              if (v === "small") return true;
+            },
+          },
+        },
+        mounted() {
+          console.log(this.age);
+          //   this.age = 30;
+        },
+        template: `<div>Foo{{age}}</div>`,
+      };
+
+      const app = new Vue({
+        el: "#app",
+        components: {
+          Foo,
+        },
+        data: {
+          msg: "hello",
+        },
+        template: `<div>
+        <Foo  title="title1111" ></Foo>
+        </div>`,
+      });
+    </script>
+  </body>
+</html>

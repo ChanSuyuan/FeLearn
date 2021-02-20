@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      {{count}} {{hello1}} {{hello2}} {{user}}
+      <button @click="handleClick">click</button>
+    </div>
+    <script>
+      // 我们想观察一个响应式数据
+      // 当它发生变更后，我们做一些处理
+      // 一对多的关系 ****
+      // 可以同时修改多个属性
+
+      const app = new Vue({
+        el: "#app",
+        data: {
+          msg: "hello world",
+          count: 0,
+          hello1: "",
+          hello2: "",
+          user: {
+            name: "xiaohong",
+            age: 18,
+          },
+        },
+        methods: {
+          handleClick() {
+            console.log("click");
+            this.count++;
+          },
+          watchCount(newVal, oldVal) {
+            console.log("method");
+            console.log(newVal, oldVal);
+          },
+        },
+        watch: {
+          count(newVal, oldVal) {
+            console.log("???");
+            console.log(newVal, oldVal);
+          },
+          // count: "watchCount",
+          // 问题是什么？ 没有办法观察到对象内部的变化
+          "user.name": {
+            handler() {
+              console.log("user name");
+            },
+          },
+          // user: {
+          //   handler() {
+          //     console.log("watch user");
+          //   },
+          //   deep: true,
+          // },
+          count: {
+            handler(newVal, oldVal) {
+              console.log(newVal, oldVal);
+              // 修改属性
+              // 多
+              this.hello1 = this.count + "hello" + "1";
+              this.hello2 = this.count + "hello" + "2";
+              // 一上来并不会执行
+              // 请求后端接口
+              // id -> 重新获取数据
+            },
+            // 问题 -》 我想让这个函数一上来就执行
+            ///怎么解决的？ 看文档 api
+            // 应用
+            immediate: true,
+          },
+        },
+      });
+      window.app = app;
+    </script>
+  </body>
+</html>
