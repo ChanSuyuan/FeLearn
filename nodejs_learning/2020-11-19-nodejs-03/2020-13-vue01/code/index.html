@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app" :testid="test+123">
+      {{msg + "123"}}
+
+      <button></button>
+    </div>
+    <script>
+      // app
+      // vue
+      // 1. 视图 -》 template
+      // 2. 逻辑
+      // vue
+      // 文本插值
+      // v-bind 去设置 attribute -> 简写 :
+
+      // html
+      // {{}} -> api ->
+      const app = new Vue({
+        el: "#app",
+        data: {
+          msg: "hello world",
+          test: "test vue",
+        },
+      });
+      // 更改我们的数据
+      // 数据驱动我们的view
+
+      // mvvm
+      // m -> model
+      // v -> view
+      // vm -> vm
+
+      window.app = app;
+    </script>
+  </body>
+</html>

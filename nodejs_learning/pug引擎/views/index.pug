@@ -1,0 +1,49 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+    body 
+        h1 Hello!
+        div DIv 
+        div(class="mydiv") 类名为mydiv的div 
+            span Span 
+        .mydiv2(style = {
+            width : "100px",
+            height : "100px",
+            background : "blue"
+        }) DIV 2
+        //- pug 注释方式
+        //- 
+            多行注释
+            第一行
+            第二行
+        // html注释
+        // 第一行
+            第二行
+        div 
+            | Hello 
+            // | 转义 div
+        - let str = "你好"
+        p #{str}
+        p #{data}
+        ul 
+        each item,index in users
+            li 姓名: #{item.name}; 年龄: #{item.age}; 身高: #{item.height};索引: #{item.index};
+        -for(let i = 0;i < 4;i ++)
+            span 我是循环出来的数据#{i}
+        - let num = 1;
+            case num 
+                when 1 
+                    p num 是 1
+                when 2
+                    p num 是 2
+                default 
+                    p num 是其他值
+        mixin mydiv
+            div 我是常用的div
+        +mydiv 
+        //- 调用
+        include common.pug

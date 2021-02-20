@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div id="login" class="panel">
+    <h2>添加商品</h2>
+    <!-- 
+        action：提交地址，发送请求的url
+        配合post把表单中的数据通过请求过程中的正文携带给后端
+            提交的数据最好通过一些方式进行格式化，比如json格式，或其它
+            浏览器（其它各种客户端框架）提供一些内置的数据格式
+
+            如果表单中支持：
+                application/x-www-form-urlencoded：表单默认，url编码
+                multipart/form-data：formdata格式，二进制
+                text/plain：纯文本
+
+            表单中还有一个特别注意的地方：
+                表单控制中的name属性，这个属性是用来设置提交数据的key
+     -->
+    <form action="" method="POST" enctype="application/x-www-form-urlencoded">
+         <div class="form-item">
+             <label>
+                 <span class="txt">商品类别：</span>
+                 <select name="categoryId">
+                     <option value="">请选择一个类别</option>
+                     {% for category in categories %}
+                     <option value="{{category.id}}">{{category.name}}</option>
+                     {% endfor %}
+                 </select>
+             </label>
+         </div>
+         <div class="form-item">
+             <label>
+                 <span class="txt">商品名称</span>
+                 <input type="text" name="name" class="form-input">
+             </label>
+         </div>
+         <div class="form-item">
+             <label>
+                 <span class="txt">商品价格</span>
+                 <input type="text" name="price" class="form-input">
+             </label>
+         </div>
+         <div class="form-item">
+             <label>
+                 <span class="txt">商品图片</span>
+                 <input type="text" name="cover" class="form-input">
+             </label>
+         </div>
+         <div class="form-item">
+             <label>
+                 <span class="txt"></span>
+                 <button class="form-button primary">提交</button>
+             </label>
+         </div>
+    </form>
+</div>   
+{% endblock %}

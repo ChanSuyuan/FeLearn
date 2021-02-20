@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作用域链增强</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //     虽然执行上下文主要有全局上下文和函数上下文两种（eval()调用内部存在第三种上下文），但有
+    //     其他方式来增强作用域链。某些语句会导致在作用域链前端临时添加一个上下文，这个上下文在代码执
+    //     行后会被删除。通常在两种情况下会出现这个现象，即代码执行到下面任意一种情况时：
+    //      try/catch 语句的 catch 块
+    //      with 语句
+    //     这两种情况下，都会在作用域链前端添加一个变量对象。对 with 语句来说，会向作用域链前端添
+    //     加指定的对象；对 catch 语句而言，则会创建一个新的变量对象，这个变量对象会包含要抛出的错误
+    //     对象的声明。看下面的例子：
+    function buildUrl() {
+        let qs = "?debug=true";
+        with (location) {
+            let url = href + qs;
+        }
+        return url;
+    }
+    // 这里，with 语句将 location 对象作为上下文，因此 location 会被添加到作用域链前端。
+    // buildUrl()函数中定义了一个变量 qs。当 with 语句中的代码引用变量 href 时，实际上引用的是
+    // location.href，也就是自己变量对象的属性。在引用 qs 时，引用的则是定义在 buildUrl()中的那
+    // 个变量，它定义在函数上下文的变量对象上。而在 with 语句中使用 var 声明的变量 url 会成为函数
+    // 上下文的一部分，可以作为函数的值被返回；但像这里使用 let 声明的变量 url，因为被限制在块级作
+    // 用域（稍后介绍），所以在 with 块之外没有定义。
+</script>
+
+</html>
