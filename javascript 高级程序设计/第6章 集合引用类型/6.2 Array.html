@@ -105,8 +105,8 @@
         slice.call(arguments)，一种异常笨拙的将 arguments 对象转换为数组的写法：
     */
 
-    // console.log(Array.of(1,2,3,4,));
-    // console.log(Array.of(undefined));
+    //  console.log(Array.of(1,2,3,4,));
+    //  console.log(Array.of(undefined));
 
     // 数组空位
 
@@ -175,8 +175,321 @@
         否为数组，而不用管它是在哪个全局执行上下文中创建的。来看下面的例子：
         if (Array.isArray(value)){
             // 操作数组
-        } 
+       }
     */
+
+    // 迭代器方法
+    /*
+        在 ES6 中，Array 的原型上暴露了 3 个用于检索数组内容的方法：keys()、values()和
+        entries()。keys()返回数组索引的迭代器，values()返回数组元素的迭代器，而 entries()返回
+        索引/值对的迭代器：
+    // */
+    // const a = ["foo", "bar", "baz", "qux"];
+    // // 因为这些方法都返回迭代器，所以可以将它们的内容
+    // // 通过 Array.from()直接转换为数组实例
+    // const aKeys = Array.from(a.keys());
+    // const aValues = Array.from(a.values());
+    // const aEntries = Array.from(a.entries());
+    // console.log(aKeys); // [0, 1, 2, 3]
+    // console.log(aValues); // ["foo", "bar", "baz", "qux"]
+    // console.log(aEntries); // [[0, "foo"], [1, "bar"], [2, "baz"], [3, "qux"]]
+
+    // 使用es6的解构可以非常容易地在循环中拆分键/值对
+    // const a = ["foo", "bar", "baz", "qux"];
+    // for(const [idx,element] of a.entries()){
+    //     alert(idx);
+    //     alert(element);
+    // }
+
+    // 复制和填充方法
+    /*  ES6 新增了两个方法：批量复制方法 copyWithin()，以及填充数组方法 fill()。这两个方法的
+        函数签名类似，都需要指定既有数组实例上的一个范围，包含开始索引，不包含结束索引。使用这个方
+        法不会改变数组的大小。
+        使用 fill()方法可以向一个已有的数组中插入全部或部分相同的值。开始索引用于指定开始填充
+        的位置，它是可选的。如果不提供结束索引，则一直填充到数组末尾。负值索引从数组末尾开始计算。
+        也可以将负索引想象成数组长度加上它得到的一个正索引：
+    */
+    // 通过fill方法，将数组内部元素全部替换为相应的值
+    // const zeros = [0, 0, 0, 0, 0];
+    // zeros.fill(5);
+    // console.log(zeros);
+
+    // // 数字上看起来是可以的,那么字符串是否也有相同的作用呢?
+    // const zeros1 = ["0", "0", "0"];
+    // zeros1.fill(1);
+    // console.log(zeros1)
+    // // 通过实验,字符串一样可以,故而是否可以理解,fill能够通用于任何一种类型呢?
+    // const zeros2 = ["0", "0", "0", "0", "0"];
+    // const a = {
+    //     name: "zhangsan",
+    //     age: 20
+    // };
+    // zeros2.fill(a);
+    // // 用6填充索引大于3的元素
+    // zeros2.fill(6, 3);
+    // console.log(zeros2);
+    // zeros2.fill(0);
+    // // 用6填充索引大于1而小于3的元素
+    // zeros2.fill(6, 1, 3);
+    // console.log(zeros2);
+    // zeros.fill(0);
+    // // 用 8 填充索引大于等于 1 且小于 4 的元素
+    // // (-4 + zeroes.length = 1)
+    // // (-1 + zeroes.length = 4)
+    // zeros.fill(8, -4, -1);
+    // console.log(zeros); // [0, 8, 8, 8, 0];
+
+
+    // // fill()静默忽略超出数组边界、零长度及方向相反的索引范围：
+    // const zeroes = [0, 0, 0, 0, 0];
+    // // 索引过低，忽略
+    // zeroes.fill(1, -10, -6);
+    // console.log(zeroes); // [0, 0, 0, 0, 0]
+    // // 索引过高，忽略
+    // zeroes.fill(1, 10, 15);
+    // console.log(zeroes); // [0, 0, 0, 0, 0]
+    // // 索引反向，忽略
+    // zeroes.fill(2, 4, 2);
+    // console.log(zeroes); // [0, 0, 0, 0, 0]
+    // // 索引部分可用，填充可用部分
+    // zeroes.fill(4, 3, 10)
+    // console.log(zeroes); // [0, 0, 0, 4, 4] 
+
+    /*
+        与fill()不同,copyWhithin()会按照指定范围浅复制数组中的部分内容,然后将它们插入到指定索引开始的位置.开始索引和结束索引则与fill()
+        使用相同的计算法.
+    // */
+    // let ints, reset = () => ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // reset();
+    // // 从 ints 中复制索引 0 开始的内容，插入到索引 5 开始的位置
+    // // 在源索引或目标索引到达数组边界时停止
+    // ints.copyWithin(5);
+    // console.log(ints); // [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
+    // reset();
+    // // 从 ints 中复制索引 5 开始的内容，插入到索引 0 开始的位置
+    // ints.copyWithin(0, 5);
+    // console.log(ints); // [5, 6, 7, 8, 9, 5, 6, 7, 8, 9]
+    // reset();
+    // ints.copyWithin(0, 4);
+    // console.log(ints);
+    // reset();
+    // // 从 ints 中复制索引 0 开始到索引 3 结束的内容
+    // // 插入到索引 4 开始的位置
+    // ints.copyWithin(4, 0, 3);
+    // console.log(ints); // [0, 1, 2, 3, 0, 1, 2, 7, 8, 9]
+    // reset();
+
+    // // JavaScript 引擎在插值前会完整复制范围内的值
+    // // 因此复制期间不存在重写的风险
+    // ints.copyWithin(2, 0, 6);
+    // console.log(ints);//[0,1,0,1,2,3,4,5,8,9];
+    // // [0,1,2,3,4,5,6,7,8,9] == > [0,1,0,1,2,3,4,5,8,9];
+    // reset();
+    // // 支持负索引值，与 fill()相对于数组末尾计算正向索引的过程是一样的
+    // ints.copyWithin(-4, -7, -3);
+    // alert(ints); // [0, 1, 2, 3, 4, 5, 3, 4, 5, 6]
+    // copyWithin()
+    // // 静默忽略超出数组边界、零长度及方向相反的索引范围：
+    // // let ints,
+    // //     reset = () => ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // // reset();
+    // // 索引过低，忽略
+    // ints.copyWithin(1, -15, -12);
+    // alert(ints); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // reset()
+    // // 索引过高，忽略
+    // ints.copyWithin(1, 12, 15);
+    // alert(ints); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // reset();
+    // // 索引反向，忽略
+    // ints.copyWithin(2, 4, 2);
+    // alert(ints); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // reset();
+    // // 索引部分可用，复制、填充可用部分
+    // ints.copyWithin(4, 7, 10)
+    // alert(ints); // [0, 1, 2, 3, 7, 8, 9, 7, 8, 9];
+
+
+    // -----------------转换方法-----------------------
+    /*
+        前面提到过，所有对象都有 toLocaleString()、toString()和 valueOf()方法。其中，valueOf()
+    返回的还是数组本身。而 toString()返回由数组中每个值的等效字符串拼接而成的一个逗号分隔的
+    字符串。也就是说，对数组的每个值都会调用其 toString()方法，以得到最终的字符串。
+    */
+    // let a = ["green","blue","red"];
+    // console.log(a.toString());
+    // console.log(a.valueOf());
+    // console.log(a.toLocaleString());
+    /* 
+        toLocaleString()方法也可能返回跟 toString()和 valueOf()相同的结果，但也不一定。在
+    调用数组的 toLocaleString()方法时，会得到一个逗号分隔的数组值的字符串。它与另外两个方法
+    唯一的区别是，为了得到最终的字符串，会调用数组每个值的 toLocaleString()方法，而不是
+    toString()方法。
+    */
+    // let person1 = {
+    //     toLocaleString() {
+    //         return "Nikolaos";
+    //     },
+    //     toString() {
+    //         return "Nicholas";
+    //     }
+    // };
+    // let person2 = {
+    //     toLocaleString() {
+    //         return "Grigorios";
+    //     },
+    //     toString() {
+    //         return "Greg";
+    //     }
+    // };
+    // let people = [person1, person2];
+    // console.log(people); // Nicholas,Greg
+    // console.log(people.toString()); // Nicholas,Greg
+    // console.log(people.toLocaleString()); // Nikolaos,Grigorios
+
+    /* 
+        这里定义了两个对象 person1 和 person2，它们都定义了 toString()和 toLocaleString()方
+    法，而且返回不同的值。然后又创建了一个包含这两个对象的数组 people。在将数组传给 alert()时，
+    输出的是"Nicholas,Greg"，这是因为会在数组每一项上调用 toString()方法（与下一行显式调用
+    toString()方法结果一样）。而在调用数组的 toLocaleString()方法时，结果变成了"Nikolaos,
+    Grigorios"，这是因为调用了数组每一项的 toLocaleString()方法。
+
+        继承的方法 toLocaleString()以及 toString()都返回数组值的逗号分隔的字符串。如果想使
+    用不同的分隔符，则可以使用 join()方法。join()方法接收一个参数，即字符串分隔符，返回包含所
+    有项的字符串。
+    */
+    //     let colors = ["red", "green", "blue"];
+    //     console.log(colors);
+    //     console.log(colors.join(",")); // red,green,blue
+    //     console.log(colors.join("||")); // red||green||blue 
+    //     /* 
+    //         这里在 colors 数组上调用了 join()方法，得到了与调用 toString()方法相同的结果。传入逗
+    //     号，结果就是逗号分隔的字符串。最后一行给 join() 传入了双竖线，得到了字符串
+    //     "red||green||blue"。如果不给 join()传入任何参数，或者传入 undefined，则仍然使用逗号作为
+    //     分隔符。
+    //     */
+    // //  若在数组中存在null或者undefined，则在join()、toString()、toLocaleString()中以空字符串呈现
+    //     let colors1 = ["red", "green", "blue",null,undefined];
+    //     console.log(colors1.toLocaleString()); //red,green,blue,,
+    //     console.log(colors1.toString());//同上
+    //     console.log(colors1.join(""));//redgreenblue
+
+    /* 
+            ECMAScript 给数组提供几个方法，让它看起来像是另外一种数据结构。数组对象可以像栈一样，
+        也就是一种限制插入和删除项的数据结构。栈是一种后进先出（LIFO，Last-In-First-Out）的结构，也就
+        是最近添加的项先被删除。数据项的插入（称为推入，push）和删除（称为弹出，pop）只在栈的一个
+        地方发生，即栈顶。ECMAScript 数组提供了 push()和 pop()方法，以实现类似栈的行为。
+    */
+
+    /* 
+            push()方法接收任意数量的参数，并将它们添加到数组末尾，返回数组的最新长度。pop()方法则
+        用于删除数组的最后一项，同时减少数组的 length 值，返回被删除的项。
+    */
+    // let colors = new Array(); // 创建一个数组
+    // let count = colors.push("red", "green"); // 推入两项
+    // console.log(count); // 2
+    // count = colors.push("black"); // 再推入一项
+    // console.log(count); // 3
+    // let item = colors.pop(); // 取得最后一项
+    // console.log(item); // black
+    // console.log(colors.length); // 2
+
+    // ========================== 队列方法 ================================
+    /* 
+        就像栈是以 LIFO 形式限制访问的数据结构一样，队列以先进先出（FIFO，First-In-First-Out）形式
+    限制访问。队列在列表末尾添加数据，但从列表开头获取数据。因为有了在数据末尾添加数据的 push()方法，
+    所以要模拟队列就差一个从数组开头取得数据的方法了。这个数组方法叫 shift()，它会删除数组的第一项并
+    返回它，然后数组长度减 1。使用 shift()和 push()，可以把数组当成队列来使用：
+    */
+
+    // let colors = new Array(); // 创建一个数组
+    // let count = colors.push("red", "green"); // 推入两项
+    // console.log(count); //2
+    // count = colors.push("black");
+    // console.log(count); //3
+    // let item = colors.shift(); // 取得第一项
+    // console.log(item); // red
+    // console.log(colors.length); // 2
+
+    /* 
+        ECMAScript 也为数组提供了 unshift()方法。顾名思义，unshift()就是执行跟 shift()相反的
+    操作：在数组开头添加任意多个值，然后返回新的数组长度。通过使用 unshift()和 pop()，可以在
+    相反方向上模拟队列，即在数组开头添加新数据，在数组末尾取得数据
+    */
+    // let colors = new Array(); // 创建一个数组
+    // let count = colors.unshift("red", "green"); // 从数组开头推入两项
+    // console.log(count); // 2
+    // count = colors.unshift("black"); // 再推入一项
+    // console.log(count); // 3
+    // console.log(colors);
+    // let item = colors.pop(); // 取得最后一项
+    // console.log(item); // green
+    // console.log(colors.length); // 2
+
+    // ======================================排序方法====================================
+    // 数组有两个方法可以用来对元素重新排序：reverse()和 sort()。顾名思义，reverse()方法就是将数组元素反向排列。
+    // const a = [1,2,3,4,5,6];
+    // console.log(a.reverse()); // 6,5,4,3,2,1
+
+    /* 
+        默认情况下，sort()会按照升序重新排列数组元素，即最小的值在前面，最大的值在后面。为此，
+        sort()会在每一项上调用 String()转型函数，然后比较字符串来决定顺序。即使数组的元素都是数值，
+        也会先把数组转换为字符串再比较、排序。
+    // */
+    //     const a1 = ["1","n",4,"0","*"];
+    //     console.log(a1.sort()); // 0,1,4,n
+    //通过观察可以得知sort()方法会内在地将数值转换为字符穿进行比对大小，且在排序中，特殊字符会排在最前面。
+    // let values = [0, 1, 5, 10, 15];
+    // values.sort();
+    // console.log(values); // 0,1,10,15,5
+
+    /* 
+        一开始数组中数值的顺序是正确的，但调用 sort()会按照这些数值的字符串形式重新排序。因此，
+    即使 5 小于 10，但字符串"10"在字符串"5"的前头，所以 10 还是会排到 5 前面。很明显，这在多数情
+    况下都不是最合适的。为此，sort()方法可以接收一个比较函数，用于判断哪个值应该排在前面。
+    */
+
+    /* 
+        比较函数接收两个参数，如果第一个参数应该排在第二个参数前面，就返回负值；如果两个参数相
+    等，就返回 0；如果第一个参数应该排在第二个参数后面，就返回正值。
+    */
+    // function compare(value1, value2) {
+    //     if (value1 < value2) {
+    //         return -1;
+    //     } else if (value1 > value2) {
+    //         return 1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+    // 这个比较函数可以适用于大多数数据类型，可以把它当作参数传给 sort()方法
+    // let values = [0, 1, 5, 10, 15,15,10,-2];
+    // values.sort(compare);
+    // console.log(values); // 
+    // 在给 sort()方法传入比较函数后，数组中的数值在排序后保持了正确的顺序。当然，比较函数也
+    // 可以产生降序效果，只要把返回值交换一下即可：
+    // function compare(value1, value2) {
+    //     if (value1 < value2) {
+    //         return 1;
+    //     } else if (value1 > value2) {
+    //         return -1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+    // let values = [0, 1, 5, 10, 15,15,-2,10];
+    // values.sort(compare);
+    // console.log(values); // 15,10,5,1,0 
+        // let value = [0, 1, 5, 10, 15];
+        // value.sort((a, b) => a < b ? 1 : a > b ? -1 : 0); 
+        // console.log(value); 
+    /* 
+        在这个修改版函数中，如果第一个值应该排在第二个值后面则返回 1，如果第一个值应该排在第二
+    个值前面则返回-1。交换这两个返回值之后，较大的值就会排在前头，数组就会按照降序排序。
+    */
+    
+    // ====================操作方法===============================
+
 
 </script>
 
