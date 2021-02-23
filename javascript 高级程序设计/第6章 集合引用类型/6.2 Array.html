@@ -480,17 +480,248 @@
     // let values = [0, 1, 5, 10, 15,15,-2,10];
     // values.sort(compare);
     // console.log(values); // 15,10,5,1,0 
-        // let value = [0, 1, 5, 10, 15];
-        // value.sort((a, b) => a < b ? 1 : a > b ? -1 : 0); 
-        // console.log(value); 
+    // let value = [0, 1, 5, 10, 15];
+    // value.sort((a, b) => a < b ? 1 : a > b ? -1 : 0); 
+    // console.log(value); 
     /* 
         在这个修改版函数中，如果第一个值应该排在第二个值后面则返回 1，如果第一个值应该排在第二
     个值前面则返回-1。交换这两个返回值之后，较大的值就会排在前头，数组就会按照降序排序。
     */
-    
-    
+
+    // 175 -======================== 操作方法==================================
+    /* 
+            对于数组中的元素，我们有很多操作方法。比如，concat()方法可以在现有数组全部元素基础上
+        创建一个新数组。它首先会创建一个当前数组的副本，然后再把它的参数添加到副本末尾，最后返回这
+        个新构建的数组。如果传入一个或多个数组，则 concat()会把这些数组的每一项都添加到结果数组。
+        如果参数不是数组，则直接把它们添加到结果数组末尾。
+    */
+    // let colors = ["red", "green", "blue"];
+    // let colors2 = colors.concat("yellow", ["black", "brown"]);
+    // console.log(colors); // ["red", "green","blue"]
+    // console.log(colors2); // ["red", "green", "blue", "yellow", "black", "brown"]
+
+    /* 
+        打平数组参数的行为可以重写，方法是在参数数组上指定一个特殊的符号：Symbol.isConcatSpreadable。这个符号能够阻止 concat()打平参数数组。相反，把这个值设置为 true 可以强制打平
+    类数组对象
+    */
+    // let colors = ["red", "green", "blue"];
+    // let newColors = ["black", "brown"];
+    // let moreNewColors = {
+    //     [Symbol.isConcatSpreadable]: true,
+    //     length: 2, //当数组超过时候，会显示empty 而不 undefined
+    //     0: "pink",
+    //     1: "cyan"
+    // };
+    // newColors[Symbol.isConcatSpreadable] = false;
+    // // 强制不打平数组
+    // let colors2 = colors.concat("yellow", newColors);
+    // // 强制打平类数组对象，即是属于同一层
+    // let colors3 = colors.concat(moreNewColors);
+    // console.log(colors); // ["red", "green", "blue"]
+    // console.log(colors2); // ["red", "green", "blue", "yellow", ["black", "brown"]]
+    // console.log(colors3); // ["red", "green", "blue", "pink", "cyan"] 
+
+    /* 
+            接下来，方法 slice()用于创建一个包含原有数组中一个或多个元素的新数组。slice()方法可以
+        接收一个或两个参数：返回元素的开始索引和结束索引。如果只有一个参数，则 slice()会返回该索引
+        到数组末尾的所有元素。如果有两个参数，则 slice()返回从开始索引到结束索引对应的所有元素，其
+        中不包含结束索引对应的元素。记住，这个操作不影响原始数组。
+    */
+    // let colors = ["red", "green", "blue", "yellow", "purple"];
+    // let colors2 = colors.slice(1);
+    // let colors3 = colors.slice(1, 4);
+    // console.log(colors2); // green,blue,yellow,purple
+    // console.log(colors3); // green,blue,yellow 
+    /* 
+        p.s 如果 slice()的参数有负值，那么就以数值长度加上这个负值的结果确定位置。比
+    如，在包含 5 个元素的数组上调用 slice(-2,-1)，就相当于调用 slice(3,4)。如果结
+    束位置小于开始位置，则返回空数组。
+    */
 
 
+
+    /* 
+        splice()的主要目的是在数组中间插入元素，但有 3 种不同的方式使用这个方法。
+    1、删除。需要给 splice()传 2 个参数：要删除的第一个元素的位置和要删除的元素数量。可以从
+    数组中删除任意多个元素，比如 splice(0, 2)会删除前两个元素。
+    2、插入。需要给 splice()传 3 个参数：开始位置、0（要删除的元素数量）和要插入的元素，可
+    以在数组中指定的位置插入元素。第三个参数之后还可以传第四个、第五个参数，乃至任意多
+    个要插入的元素。比如，splice(2, 0, "red", "green")会从数组位置 2 开始插入字符串
+    "red"和"green"。
+    3、替换。splice()在删除元素的同时可以在指定位置插入新元素，同样要传入 3 个参数：开始位
+    置、要删除元素的数量和要插入的任意多个元素。要插入的元素数量不一定跟删除的元素数量
+    一致。比如，splice(2, 1, "red", "green")会在位置 2 删除一个元素，然后从该位置开始
+    向数组中插入"red"和"green"。
+    splice()方法始终返回这样一个数组，它包含从数组中被删除的元素（如果没有删除元素，则返
+    回空数组）。
+    
+    */
+    // let colors = ["red", "green", "blue"];
+    // let removed = colors.splice(0, 1); // 删除第一项
+    // console.log(colors); // green,blue
+    // console.log(removed); // red，只有一个元素的数组
+    // removed = colors.splice(1, 0, "yellow", "orange"); // 在位置 1 插入两个元素
+    // console.log(colors); // green,yellow,orange,blue
+    // console.log(removed); // 空数组
+    // removed = colors.splice(1, 1, "red", "purple"); // 插入两个值，删除一个元素
+    // console.log(colors); // green,red,purple,orange,blue
+    // console.log(removed); // yellow，只有一个元素的数组
+
+    /* 
+        这个例子中，colors 数组一开始包含 3 个元素。第一次调用 splice()时，只删除了第一项，colors
+    中还有"green"和"blue"。第二次调用 splice()时，在位置 1 插入两项，然后 colors 包含"green"、
+    "yellow"、"orange"和"blue"。这次没删除任何项，因此返回空数组。最后一次调用 splice()时
+    删除了位置 1 上的一项，同时又插入了"red"和"purple"。最后，colors 数组包含"green"、"red"、
+    "purple"、"orange"和"blue"。
+    */
+
+    //=================搜索和位置方法====================
+    // ECMAScript 提供两类搜索数组的方法：按严格相等搜索和按断言函数搜索。
+
+    /* 
+    1. 严格相等
+        ECMAScript 提供了 3 个严格相等的搜索方法：indexOf()、lastIndexOf()和 includes()。其
+        中，前两个方法在所有版本中都可用，而第三个方法是 ECMAScript 7 新增的。这些方法都接收两个参
+        数：要查找的元素和一个可选的起始搜索位置。indexOf()和 includes()方法从数组前头（第一项）
+        开始向后搜索，而 lastIndexOf()从数组末尾（最后一项）开始向前搜索。
+        indexOf()和 lastIndexOf()都返回要查找的元素在数组中的位置，如果没找到则返回1。
+        includes()返回布尔值，表示是否至少找到一个与指定元素匹配的项。在比较第一个参数跟数组每一
+        项时，会使用全等（===）比较，也就是说两项必须严格相等。
+    */
+    //    indexOf(params)返回数组中首次出现params的位置。
+    //    lastindexOf(params)返回数组中最后一次出现params的位置。
+    //    inlcudes() 包含数
+    // let numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+    // console.log(numbers.indexOf(4)); // 3
+    // console.log(numbers.lastIndexOf(4)); // 5
+    // console.log(numbers.includes(4)); // true
+    // console.log(numbers.indexOf(4, 4)); // 5
+    // console.log(numbers.lastIndexOf(4, 4)); // 3
+    // console.log(numbers.includes(4, 7)); // false
+    // let person = { name: "Nicholas" };
+    // let people = [{ name: "Nicholas" }];
+    // let morePeople = [person];
+    // console.log(people.indexOf(person)); // -1
+    // console.log(morePeople.indexOf(person)); // 0
+    // console.log(people.includes(person)); // false
+    // console.log(morePeople.includes(person)); // true
+
+    // 2、断言函数
+    /* 
+        ECMAScript 也允许按照定义的断言函数搜索数组，每个索引都会调用这个函数。断言函数的返回
+    值决定了相应索引的元素是否被认为匹配。
+    断言函数接收 3 个参数：元素、索引和数组本身。其中元素是数组中当前搜索的元素，索引是当前
+    元素的索引，而数组就是正在搜索的数组。断言函数返回真值，表示是否匹配。
+    find()和 findIndex()方法使用了断言函数。这两个方法都从数组的最小索引开始。find()返回
+    第一个匹配的元素，findIndex()返回第一个匹配元素的索引。这两个方法也都接收第二个可选的参数，
+    用于指定断言函数内部 this 的值。
+    */
+    //    const people = [
+    //        {
+    //            name:"Matt",
+    //            age : 27
+    //        },
+    //        {
+    //            name:"Nicholas",
+    //            age : 29
+    //        }
+    //     ];
+    //     console.log(people.find((element,index,array) => element.age < 28));
+    //     console.log(people.findIndex((element,index,array) => element.age <28));
+
+    //     const evens = [2,4,6];
+    //     evens.find((element,index,array)=>{
+    //         console.log(element); //输出第一位，往后延续
+    //         console.log(index);//同上道理。
+    //         console.log(array);//输出数组
+    //         return element === 4;
+    //     }); //返回断言函数所查找数值4。并且在查找中，只要查找到就不会继续往下查。
+
+    // ==========================迭代方法=============================
+    /* 
+        ECMAScript 为数组定义了 5 个迭代方法。每个方法接收两个参数：以每一项为参数运行的函数，
+    以及可选的作为函数运行上下文的作用域对象（影响函数中 this 的值）。传给每个方法的函数接收 3
+    个参数：数组元素、元素索引和数组本身。因具体方法而异，这个函数的执行结果可能会也可能不会影
+    响方法的返回值。
+    */
+    /*  
+        every()：对数组每一项都运行传入的函数，如果对每一项函数都返回 true，则这个方法返回 true。
+        filter()：对数组每一项都运行传入的函数，函数返回 true 的项会组成数组之后返回。
+        forEach()：对数组每一项都运行传入的函数，没有返回值。
+        map()：对数组每一项都运行传入的函数，返回由每次函数调用的结果构成的数组。
+        some()：对数组每一项都运行传入的函数，如果有一项函数返回 true，则这个方法返回 true。
+    */
+
+
+    /* 
+        在这些方法中，every()和 some()是最相似的，都是从数组中搜索符合某个条件的元素。对 every()
+    来说，传入的函数必须对每一项都返回 true，它才会返回 true；否则，它就返回 false。而对 some()
+    来说，只要有一项让传入的函数返回 true，它就会返回 true。
+    */
+    // let numbers = [1,2,3,4,5,4,3,2,1];
+    // let everyResult = numbers.every((item,index,array) => item > 2);
+    // console.log(everyResult);//false
+    // let someResult = numbers.some((item,index,array) => item > 2);
+    // console.log(someResult);//true
+
+    // filter()方法。这个方法基于给定的函数来决定某一项是否应该包含在它返回的数组中。     
+    // 当一个返回数值
+    //     调用 filter()返
+    // 回的数组包含 3、4、5、4、3，因为只有对这些项传入的函数才返回 true。
+    // 这个方法非常适合从数组中筛选满足给定条件的元素。
+    // 接下来 map()方法也会返回一个数组。这个数组的每一项都是对原始数组中同样位置的元素运行传入函数而返回的结果。
+    // 看一看 filter()方法。这个方法基于给定的函数来决定某一项是否应该包含在它返回的数
+// 组中。比如，要返回一个所有数值都大于 2 的数组
+    // let numbers = [1,2,3,4,5,4,3,2,1];
+    // let mapResult = numbers.map((item,index,array)=>item * 2);
+    // console.log(mapResult);// 2,4,6,8,10,8,6,4,2 
+
+    /* 
+        最后，再来看一看 forEach()方法。这个方法只会对每一项运行传入的函数，没有返回值。本质
+    上，forEach()方法相当于使用 for 循环遍历数组。
+    */
+//    let numbers = [1,2,3,4,5,4,3,2,1];
+//    numbers.forEach((item,index,array)=>{
+//        if(item == 3){
+//            return;
+//        }
+//        console.log(item);
+//    });
+
+// =================归并方法=================
+
+/* 
+    ECMAScript 为数组提供了两个归并方法：reduce()和 reduceRight()。这两个方法都会迭代数
+组的所有项，并在此基础上构建一个最终返回值。reduce()方法从数组第一项开始遍历到最后一项。
+而 reduceRight()从最后一项开始遍历至第一项。
+    这两个方法都接收两个参数：对每一项都会运行的归并函数，以及可选的以之为归并起点的初始值。
+传给 reduce()和 reduceRight()的函数接收 4 个参数：上一个归并值、当前项、当前项的索引和数
+组本身。这个函数返回的任何值都会作为下一次调用同一个函数的第一个参数。如果没有给这两个方法
+传入可选的第二个参数（作为归并起点值），则第一次迭代将从数组的第二项开始，因此传给归并函数
+的第一个参数是数组的第一项，第二个参数是数组的第二项。
+*/
+
+// 可以使用 reduce()函数执行累加数组中所有数值的操作
+let values = [1,2,3,4,5];
+// let sum = values.reduce((prev, cur, index, array) => prev + cur);
+// console.log(sum); // 15
+
+
+// 第一次执行归并函数时，prev 是 1，cur 是 2。第二次执行时，prev 是 3（1 + 2），cur 是 3（数
+// 组第三项）。如此递进，直到把所有项都遍历一次，最后返回归并结果。
+// reduceRight()方法与之类似，只是方向相反。来看下面的例子：
+let values = [1, 2, 3, 4, 5];
+let sum = values.reduceRight(function(prev, cur, index, array){
+ return prev + cur;
+});
+console.log(sum); // 15 
+// 两种方法除去方向之外没有特殊区别
+
+// console.log(Array.from(values));
+// a[0] = 10;
+// console.log(a);
+// console.log(a == values);
+// console.log(values);
 </script>
 
 </html>
