@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    const m = new Map().set(3, 4).set(5, 6);
+    const n = new Set().add(1).add(8).add(10);
+    console.log(Array.from(m)); //0:[3,4],1:[5,6];
+    console.log(Array.from(n));//[1,8,10];
+
+
+    //浅拷贝，在不改变原有的前提下
+    const a1 = [1, 2, 3, 4];
+    const a2 = Array.from(a1);
+    a1[0] = 3;
+    console.log(a1);
+    console.log(a2);
+
+    const iter = {
+        *[Symbol.iterator]() {
+            yield 1;
+            yield 2;
+        }
+    };
+    console.log(Array.from(iter));
+
+    var myIterable = {};
+    myIterable[Symbol.iterator] = function* () {
+        yield 1;
+        yield 2;
+    }
+    console.log([...myIterable]);
+
+    a3 = Array.from(a1, x => x ** 2);
+    a4 = Array.from(a1, function (x) { return x ** this.exponent }, { exponent: 2 });
+
+    console.log(a3);
+    console.log(a4);
+
+    // of 将 参数转换为数组。
+    console.log(Array.of(1, 2, 3, 4, 5));
+    // 数组空位，显示empty
+    console.log([, , , , , , ,].length);// 7 
+
+    const options = [1, , , , , 5];
+    for (const option of options) {
+        console.log(option === undefined);//false true*4 false    
+    }
+    const tmp = [0, 1, 2, 3];
+    for (const val of tmp) {
+        console.log(val == undefined); ///false
+    }
+
+    // map()跳过空
+    console.log(options.map(()=> 6));// [6,empty*4,6];
+    // join()视空为字符串
+    console.log(options.join("--"));//1-------------5
+
+    //  通过设置长度进行数组元素添加、删除
+    let colors = ["green","yellow","black"];
+    colors.length =2;
+    console.log(colors); // array(2)["green","yellow"]
+    // 赋值填充
+    colors[colors.length] = "black"; //添加于末尾
+
+    console.log(Array.isArray(colors));
+
+    // 复制和填充方法
+    // 一般数组所使用额填充方法为fill()；
+    // 关于fill()的用法
+    const zeroes = [1,2,3,4,5,6];
+    zeroes.fill(0);
+    console.log(zeroes.fill(3,1,2)); // 0 3 0 0 0 0
+    console.log(zeroes.fill(3,2,1)); //不展示
+    
+    // copyWhithin() 浅复制指定范围内的数组内容
+    let ints,reset = () => ints = [0,1,2,3,4,5,6,7,8,9];
+    reset();
+    // let ints1 = [0,1,2,3,4,5,6,7,8,9]; //创建相同
+    console.log(ints.copyWithin(5));
+    reset();
+    console.log(ints.copyWithin(4,0,3));// [0, 1, 2, 3, 0, 1, 2, 7, 8, 9]
+
+    // toLocaleString 与 toString()区别
+    // 为了得到最终的字符串，会调用数组每个值的 toLocaleString()方法，而不是
+    // toString()方法。
+    
+    let person1 = {
+        toLocaleString(){
+            return "NUl";
+        },
+        toString(){
+            return "222";
+        }
+    }
+    let person2 = {
+        toLocaleString(){
+            return "aaa";
+        },
+        toString(){
+            return "333";
+        }
+    }
+    var people = [person1,person2];
+    console.log(people);
+    console.log(people.toString());
+    console.log(people.toLocaleString());
+    
+
+
+</script>
+
+</html>
