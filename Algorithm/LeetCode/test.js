@@ -26,12 +26,28 @@
 
 // hammingWeight("00000000000000000000000000001011");
 
-const obj = {
-    [Symbol.toPrimitive](a){
-        if(a === 'Object'){
-            return {age:42};
-        }
-        return null
+// const obj = {
+//     [Symbol.toPrimitive](a){
+//         if(a === 'Object'){
+//             return {age:42};
+//         }
+//         return null
+//     }
+// };
+// console.log(+obj);
+
+// function fn(cb){
+//     cb && cb();
+// }
+// fn(()=>{
+//     console.log(123);
+// })
+
+const forEach = function(arr,fn){
+    for(let i = 0;i < arr.length;i ++){
+        fn(arr[i]);
     }
-};
-console.log(+obj);
+}
+forEach(arr,item=>{
+    console.log(item);
+})
