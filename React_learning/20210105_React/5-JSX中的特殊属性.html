@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="js/react.js"></script>
+  <script src="js/react-dom.js"></script>
+  <script src="js/babel.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    /*
+      JSX: 为 JavaScript 添加 XML 的语法扩展 
+      注意:
+        1. JSX 不是字符串
+        2. JSX 并不是HTML，所以很多写法和 html 有出入
+          - class --> className
+        3. 注意 JSX 大写敏感，所有的标签名都必须小写，组件名首字母必须大写
+        4. JSX 中所有标签都必须闭合
+
+      插值表达式: 
+        1. 插值表单式中，可以接收一个 javascript 的表达式
+        2. 在 JSX 内容中插入数据，表达式的计算结果必须是一个 ReactElement
+      
+      style：
+        1. 注意 元素的属性中也可以使用 插值表达式  
+        2. style 接收的是一个对象
+
+      ReactElement(React 可以接收的子节点) 都包含哪些内容：
+        1. React 构建的虚拟DOM (react.element, 狭义上的 ReactElement)
+        2. string | number 原样输出
+        3. boolean | null | undefined  会被忽略为空
+        4. 数组 去掉连接符后进行输出，有几位就输出几个子节点 
+        5. 注释
+        6. 函数 会被忽略
+
+      表达式，会产生值的一段程序: 
+        1. 各种运算符
+        2. 函数调用
+        3. 变量或常量 
+    */
+    function fn(){console.log(1);return "函数"}
+    const data = {
+      title: "欢迎进入 React 的世界",
+      subtitle: "没有 JSX 的React 世界是黑暗的"
+    }
+    // const style = {
+    //   width: 400,
+    //   height: 400,
+    //   background: "red"
+    // };
+    // const div = <div 
+    //   className={"main-" + "box"}
+    //   style={style}  
+    // >
+    //   <header>
+    //     <h1>{data.title}</h1>
+    //     <p>{data.subtitle}</p>
+    //   </header>
+    // </div>;
+    const div = <div 
+      className={"main-" + "box"}
+      style={{
+        width: 400,
+        height: 400,
+        background: "red"
+      }}  
+    >
+      <header>
+        <h1>{data.title}</h1>
+        <p>{data.subtitle}</p>
+      </header>
+    </div>;
+    ReactDOM.render(
+      div,
+      document.querySelector("#root")
+    );
+  </script>
+  <!-- 
+-->
+</body>
+
+</html>

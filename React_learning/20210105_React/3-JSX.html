@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="js/react.js"></script>
+  <script src="js/react-dom.js"></script>
+  <script src="js/babel.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    /*
+      JSX: 为 JavaScript 添加 XML 的语法扩展 
+      注意:
+        1. JSX 不是字符串
+        2. JSX 并不是HTML，所以很多写法和 html 有出入
+          - class --> className
+        3. 注意 JSX 大写敏感，所有的标签名都必须小写，组件名首字母必须大写
+        4. JSX 中所有标签都必须闭合
+    */
+    const div = <div className="main">
+      <header>
+        <h1>欢迎进入 React 的世界</h1>
+        <p>没有 JSX 的 <br />React 世界是黑暗的</p>
+      </header>
+    </div>;
+    ReactDOM.render(
+      div,
+      document.querySelector("#root")
+    );
+  </script>
+  <!-- 
+-->
+</body>
+
+</html>
