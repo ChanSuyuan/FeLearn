@@ -392,4 +392,129 @@ console.log(toLine(b));
 
 - 在 Js 中 Infinity 代表无穷大的数值，且不是常量，即无法明确表示它到底有多大。可以通过isFinite(val)判断当前数字是否是无穷大，函数返回true表示不是无穷大，返回false表示是无穷大。
 
-# 
+
+
+## 正则表达式
++ 正则表达式是匹配模式，要么匹配字符，要么匹配位置。
++ ![image-20211025100946666](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025100946666.png)
++ 可以与空字符串进行类比，字符的首尾、间隙都可以用空字符串进行连接。 
++ 例如``Hello === "H" + "" + "e" + "" + "l" + "" + "l" + "" + "o"``
+
+
+
++ 正则中常用来表达位置的有：^、$、\b、\B、?=p、(?!p)、(?<=p)、(?<!p)
+
+
+
+
+
+> ^  脱字符，匹配行的开头
+>
+> 例如要在 hello 前添加一个笑脸（😄）
+
+``` javascript
+let string = 'hello'
+console.log(string.replace(/^/,'😄')) // 😄hello
+```
+
+
+
+> $  匹配行的结尾
+>
+> 同理想在 hello 后添加一个笑脸（😄）
+
+```javascript
+let string = 'hello'
+console.log(string.replace(/$/,'😄')) // hello😄
+```
+
+
+
+
+
+> \b 单词的边界，具体有三种规则
+>
+> ① \w和\W之间的位置
+>
+> ② ^与\w之间的位置
+>
+> ③ \w与$之间的位置
+>
+> 比如要把 **xxx_love_study_1.mp4**，变成`❤️xxx_love_study_1❤️.❤️mp4❤️`
+
+```javascript
+'xxx_love_study_1.mp4'.replace(/\b/g, '❤️') // ❤️xxx_love_study_1❤️.❤️mp4❤️
+```
+
+![image-20211025102726811](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025102726811.png)
+
+
+
+> \B 非单词的边界，与 \b 是反着来的意思，它的规则如下
+>
+> ① \w与\w之间的位置
+>
+> ② \W与\W之间的位置
+>
+> ③^与\W之间的位置
+>
+> ④\W与$之间的位置
+
+```javascript
+'[[xxx_love_study_1.mp4]]'.replace(/\B/g, '❤️') // ❤️[❤️[x❤️x❤️x❤️_❤️l❤️o❤️v❤️e❤️_❤️s❤️t❤️u❤️d❤️y❤️_❤️1.m❤️p❤️4]❤️]❤️
+```
+
+![image-20211025103140208](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025103140208.png)
+
+> (?=p)
+>
+> 符合 p 子模式前面的那个位置。换句话说，有一个位置，紧跟其后需要满足 p 子模式。也有一个学名叫**正向先行断言**。
+>
+> 还是这个例子`xxx_love_study_1.mp4`，要在xxx(xxx可以指代任何你喜欢的那个TA)前面塞一个❤️。
+
+```javascript
+'xxx_love_study_1.mp4'.replace(/(?=xxx)/g, '❤️') // ❤️xxx_love_study_1.mp4
+```
+
+![image-20211025103658300](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025103658300.png)
+
+
+
+> (?!p)
+>
+> 与（?=p）相反，可以理解为(?=p)匹配到的位置之外的位置都是属于(?!p)的，它被称为负向先行断言。
+
+```javascript
+'xxx_love_study_1.mp4'.replace(/(?!xxx)/g, '❤️') 
+
+// (?=xxx)的输出
+❤️xxx_love_study_1.mp4
+// (?!xxx)的输出
+x❤️x❤️x❤️_❤️l❤️o❤️v❤️e❤️_❤️s❤️t❤️u❤️d❤️y❤️_❤️1❤️.❤️m❤️p❤️4❤️
+```
+
+
+
+> (?<=p)
+>
+> 符合p子模式后面(注意(?=p)表示的是前面)的那个位置。换句话说是，有一个位置，其前面的部分需要满足p子模式。
+
+```javascript
+'xxx_love_study_1.mp4'.replace(/(?<=xxx)/g, '❤️') //xxx❤️_love_study_1.mp4
+```
+
+![image-20211025110811911](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025110811911.png)
+
+> (?<!p)
+>
+> (?<=p)反过来的意思，可以理解为(?<=p)匹配到的位置之外的位置都是属于(?<!p)的，
+
+```javascript
+'xxx_love_study_1.mp4'.replace(/(?<!xxx)/g, '❤️') 
+
+// (?<=xxx)的输出
+xxx❤️_love_study_1.mp4
+// (?<!xxx)的输出
+❤️x❤️x❤️x_❤️l❤️o❤️v❤️e❤️_❤️s❤️t❤️u❤️d❤️y❤️_❤️1❤️.❤️m❤️p❤️4❤️
+```
+
