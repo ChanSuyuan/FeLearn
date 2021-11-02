@@ -3,14 +3,39 @@
 ## 数据结构
 
 - **Js目前含有的数据结构：**
+- **基本数据类型：string number undefined null boolean Bigint Symbol**
+	引用数据类型： Object
+- 基本数据类型与复杂数据类型之间的区别在与存储位置的不同：
+  - 原始数据类型直接存储在栈（stack）中的简单数据段，占据空间小、大小固定，属于被频繁使用数据，所以放入栈中存储；
+  - 引用数据类型存储在堆（heap）中的对象，占据空间大、大小不固定。如果存储在栈中，将会影响程序运行的性能；引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体。
 
-- - **基本数据类型：string number undefined null boolean Bigint Symbol**
-  - **复杂： Object**
 
-- **JavaScript最大安全数字与最小安全数字**
 
-- ```javascript 
-  
+## 数据类型检测的方式
+
++ （1)、**typeof** 判断该类型的机械码 ==> (000 对象  010 浮点数 100 字符串 110 布尔 1: 整数)
+
++ ```javascript
+  console.log(typeof 2);               // number
+  console.log(typeof true);            // boolean
+  console.log(typeof 'str');           // string
+  console.log(typeof []);              // object    
+  console.log(typeof function(){});    // function
+  console.log(typeof {});              // object
+  console.log(typeof undefined);       // undefined
+  console.log(typeof null);            // object
+  ```
+
++ （2）、**instanceof** 可以正确判断对象的类型，其内部运行机制是判断其在原型链中是否能够找到该类型的类型。
+
++ ```javascript
+  console.log(2 instanceof Number);                    // false
+  console.log(true instanceof Boolean);                // false 
+  console.log('str' instanceof String);                // false 
+   
+  console.log([] instanceof Array);                    // true
+  console.log(function(){} instanceof Function);       // true
+  console.log({} instanceof Object);                   // true
   ```
 
 
