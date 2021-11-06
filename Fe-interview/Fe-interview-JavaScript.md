@@ -11,6 +11,26 @@
 
 
 
+
+
+## 引用数据类型常用 Api
+
+###  ForEach()   
+
+可以改变原数组，返回值为 undefined
+
+###  Map()
+
+会创建一个新数组，且能够有返回值
+
+### filter ()
+
+
+
+### Reduce()
+
+
+
 ## 数据类型检测的方式
 
 + （1)、**typeof** 判断该类型的机械码 ==> (000 对象  010 浮点数 100 字符串 110 布尔 1: 整数)
@@ -389,8 +409,6 @@ void async function main() {
 }
 ```
 
-
-
 ## 小驼峰命名
 
 ```typescript
@@ -424,8 +442,6 @@ console.log(toLine(b));
 + ![image-20211025100946666](/Users/chensiyuan/Library/Application Support/typora-user-images/image-20211025100946666.png)
 + 可以与空字符串进行类比，字符的首尾、间隙都可以用空字符串进行连接。 
 + 例如``Hello === "H" + "" + "e" + "" + "l" + "" + "l" + "" + "o"``
-
-
 
 + 正则中常用来表达位置的有：^、$、\b、\B、?=p、(?!p)、(?<=p)、(?<!p)
 
