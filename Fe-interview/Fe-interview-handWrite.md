@@ -41,7 +41,7 @@ function flatten(arr){
 
 ## Promise
 
-- **根据 Promise A+ 规范提出，Promise 共含有三种状态： PENDING、FULFILLED、 REJECTED**
+- **根据 Promise A+ 规范提出，Promise 共含有三种状态： PENDING、FULFILLED、 REJECTED**
 
 
 

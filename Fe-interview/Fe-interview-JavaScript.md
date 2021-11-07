@@ -1,5 +1,11 @@
 # Js Concept
 
+[TOC]
+
+
+
+
+
 ## 数据结构
 
 - **Js目前含有的数据结构：**
@@ -15,7 +21,7 @@
 
 ## 引用数据类型常用 Api
 
-###  ForEach()   
+###  forEach()   
 
 可以改变原数组，返回值为 undefined
 
@@ -25,11 +31,12 @@
 
 ### filter ()
 
+会创建一个新数组
 
+### Reducer（）
 
-### Reduce()
-
-
+- Reducer 函数接受四个参数 acc 、 cur 、 idx 、 src
+- Reducer 函数还提供一个额外参数 initalValue 作为累加器的初始值。如果没有提供该参数，则将初始值默认为数组的第一个元素。	
 
 ## 数据类型检测的方式
 
@@ -356,8 +363,6 @@ console.log(data);
 
 - 而如果替代者(replacer)是个 *函数*，这个函数将被对象的每个属性都调用一遍。 函数返回的值会成为这个属性的值，最终体现在转化后的JSON字符串中（注：Chrome下，经过实验，如果所有属性均返回同一个值的时候有异常，会直接将返回值作为结果输出而不会输出JSON字符串），而如果返回值为 *undefined*，则该属性会被排除在外。
 
-
-
 ## JSON.parse()
 
 - 使用 JSON.parse 能够将 JSON 字符串解析转化为 JavaScript 值。
@@ -375,15 +380,6 @@ JSON.parse(jsonArray) // [1, 2, 3]
 const jsonArray = JSON.stringify({ name: "Lydia" }) // '{"name":"Lydia"}'
 JSON.parse(jsonArray) // { name: 'Lydia' }
 ```
-
-## Reducer
-
-- Reducer 函数接受四个参数 acc 、 cur 、 idx 、 src
-- Reducer 函数还提供一个额外参数 initalValue 作为累加器的初始值。如果没有提供该参数，则将初始值默认为数组的第一个元素。	
-
-
-
-
 
 ## padStart
 
@@ -557,5 +553,187 @@ x❤️x❤️x❤️_❤️l❤️o❤️v❤️e❤️_❤️s❤️t❤️u�
 xxx❤️_love_study_1.mp4
 // (?<!xxx)的输出
 ❤️x❤️x❤️x_❤️l❤️o❤️v❤️e❤️_❤️s❤️t❤️u❤️d❤️y❤️_❤️1❤️.❤️m❤️p❤️4❤️
+```
+
+
+
+
+
+## WebWorker（HTML5 标准）
+
+> 作用：在主线程运作之外再创建一个worker线程，在主线程执行任务的同时，worker 线程也可以在后台执行它自己的任务，互不影响，使得 Js 能够变成多线程环境。
+
+### 创建 worker 对象
+
+> 主线程调用 new Worker() 构造函数,创建一个 worker 线程,构造函数的参数是一个url ,生成这种 url 的方法有两种 
+
+
+
++ 脚本文件
+
+  + ```javascript
+    const worker new Worker("https://~.js") // 	脚本文件
+    ```
+
+  + ##### Worker 存在两个限制
+
+    > 1、分配给 Worker 线程运行的脚本文件，必须与主线程的脚本文件同源。
+    >
+    > 2、worker 不能读取本地的文件（不能打开本机的文件系统 file:// ），它所加载的脚本必须来自网络。
+
++ 字符串形式
+
+  + ```javascript
+    const data = `
+        //  worker线程 do something
+        `;
+    // 转成二进制对象
+    const blob = new Blob([data]);
+    // 生成url
+    const url = window.URL.createObjectURL(blob);
+    // 加载url
+    const worker = new Worker(url);
+    ```
+
+  + 在项目中：可以把worker线程的逻辑写在 js 文件里面，然后字符串化，然后再export、import，配合 webpack 进行模块化管理,这样就很容易使用了。
+
+### 主线程的其他 API：
+
+#### 主线程与 worker 线程通信
+
++ ```javascript
+  const worker = new Worker()
+  worker.postMessage({
+    hello: ['hello', 'world']
+  });		
+  ```
+
++ 它们**相互之间的通信可以传递对象和数组**，这样我们就可以根据相互之间传递的信息来进行一些操作，比如可以设置一个`type`属性，当值为`hello`时执行什么函数，当值为`world`的时候执行什么函数。
+
++ 它们之间的通信是通过拷贝的形式来传递数据的，进行传递的对象需要经过序列化处理，接下来在另一端还要进行反序列化。这也说明，
+
+  + > 1.我们必须传递能够被序列化的数据,比如函数就不能传.
+    >
+    > 2.在一端改变数据,另一端是不会受到影响的.
+
+#### 监听 worker 线程返回的信息
+
+```javascript
+worker.onmessage = function (e) {
+    console.log('父进程接收的数据：', e.data);
+    // doSomething();
+}
+```
+
+#### 主线程关闭 worker 线程
+
+Worker 线程一旦新建成功,就会始终运行,这样有利于随时相应主线程的通信.这也是 Worker 比较耗费计算机的 CPU 的原因,一旦使用完毕,就应该关闭 worker 线程 。
+
+```javascript
+worker.terminate()
+```
+
+#### 监听错误
+
+```javascript
+// worker线程报错
+worker.onerror = e => {
+    // e.filename - 发生错误的脚本文件名；e.lineno - 出现错误的行号；以及 e.message - 可读性良好的错误消息
+    console.log('onerror', e);
+};
+```
+
+
+
+### Worker 线程
+
+#### self 代表 worker 线程自身
+
+worker 线程的执行上下文是一个叫做 WorkerGlobalScope 的东西，与主线程的 window 是不同的。 需要使用 self / WorkerGlobalScope 来访问全局对象。
+
+#### 监听主线程传来的信息
+
+```javaScript
+self.onmessage = e =>{
+	console.log(e)
+	console.log('我是子进程')
+}
+```
+
+#### 发送信息给主线程
+
+```javaScript
+self.postMessage = e => {
+	console.log('主线程传来的信息',e.data)
+}
+```
+
+#### worker 线程关闭自身
+
+```javascript
+self.close()
+```
+
+#### worker 线程加载脚本
+
+Worker 线程能访问一个全局函数 importScripts() 来引入脚本，该函数接收 0 个或者多个 url 作为参数。
+
+```javascript
+importScripts('http~.js','https~.js')
+```
+
+> 脚本中的全局变量能够被 worker 线程使用。
+>
+> 脚本的下载顺序是不固定的，但执行时会按照传入 importScripts() 中的文件顺序进行，这个过程是同步的。
+
+#### Worker 线程限制
+
+因为 worker 创造了另外一个线程，不在主线程上，相应的会有一些限制，我们**无法使用**下列对象
+
+> window document DOM parent
+
+但我们可以使用以下对象
+
+> 浏览器: navigator 对象
+>
+> URL: location  对象,只读
+>
+> 发送请求, XMLHttpRequest 对象
+>
+> 定时器: setTimeout/setInterval, 在 worker 线程轮询
+>
+> 应用缓存: Application Cache
+
+### 应用场景:
+
+数学运算 / 图像 影音等文件处理 / 大数据检索 / 耗时任务
+
+#### poolWorker.js
+
+```javascript
+//模拟
+self.onmessage = msg => {
+	console.log(msg)
+  console.log('我是子进程')
+}
+self.postMessage('我是子进程弟弟')
+self.close()
+```
+
+#### index.html
+
+```html
+<script>
+	const worker = new Worker('./poolWorker.js')
+  worker.postMessage('我是主线程')
+  worker.onmessage = msg => {
+		console.log(msg)
+    console.log('我是主进程哥哥')
+    worker.terminate()
+  }
+  worker.onerror = e =>{
+    console.log(e)
+  }
+</script>
 ```
 
