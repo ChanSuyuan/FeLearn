@@ -524,7 +524,7 @@ Access-Control-Max-Age: 86400
 
 
 
-### Last-Modified / If-Modified-Since
+### Last-Modified / If-Modified-Since （Last-Modified在 响应头，If-Modified-Since 在 请求头）
 
 - **服务器通过 Last-Modified 字段告知客户端，资源最后一次被修改的时间。浏览器将这个值和内容一起记录在缓存数据库中。下一次请求相同资源的同时，浏览器从自己的缓存中找出 “不确定是否过期” 的缓存，因此在请求头中将上次的 Last-Modified 的值写入到请求头的 If-Modified-Since 字段。服务器会将 If-Modified-Since 的值与 Last-Modified 字段进行比较。如果相等，则表示未进行修改，响应 304，反之则表示修改了，相应 200，并返回数据。**
 
@@ -532,7 +532,7 @@ Access-Control-Max-Age: 86400
 
 
 
-### Etag / If-None-Match
+### Etag / If-None-Match（Etag在 响应头，if-none-match 在 请求头）
 
 - `**Etag**` **存储的是文件的特殊标识(一般都是 hash 生成的)，服务器存储着文件的** `**Etag**` **字段。之后的流程和** `**Last-Modified**` **一致，只是** `**Last-Modified**` **字段和它所表示的更新时间改变成了** `**Etag**` **字段和它所表示的文件 hash，把** `**If-Modified-Since**` **变成了** `**If-None-Match**`**。服务器同样进行比较，命中返回 304, 不命中返回新资源和 200。**
 - **浏览器在发起请求时，服务器返回在 Response header 中返回请求资源的唯一标识。在下一次请求时，会将上一次返回的Etag值赋值给If-No-Matched并添加在 Request Header 中。服务器将浏览器传来的if-no-matched跟自己的本地的资源的ETag做对比，如果匹配，则返回304通知浏览器读取本地缓存，否则返回200和更新后的资源。**

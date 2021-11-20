@@ -737,3 +737,9 @@ self.close()
 </script>
 ```
 
+## ES6 模块化与 Common.js 的区别
+
+
+
+
+
