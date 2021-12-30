@@ -16,6 +16,36 @@ inherit 指定 box-sizing 属性的值，应该从父元素继承
 
 
 
+## 浏览器渲染机制
+
+### 网页生成过程:
+
+> + HTML 被 HTML 解析器解析成 DOM 树
+> + CSS 则被 CSS 解析器解析成 CSSOM 树
+> + 结合 DOM 树和 CSSOM 树,生成一颗渲染树(Render Tree)
+> + 生成布局(flow),即将所有渲染树的所有节点进行平面合成
+> + 将布局绘制在屏幕上
+
+#### 重排
+
+> 重新生成布局重新排列元素
+>
+> 时常引起重排的属性: width height margin padding display border position overflow clientWidth offsetWidth scrollWidth 
+>
+> 由于浏览器渲染界面时基于流失布局模型的,所以触发重排时会对周围的DOM重新排列,从全局范围的角度看,会从根节点html开始对整个渲染树进行重新布局.从局部范围来看,会对渲染树的某部分或某一个渲染对象进行重新布局.
+>
+> 如果重排了，那么也一定进行了重绘。
+
+#### 重绘
+
+> 元素外观改变而不改变布局。
+>
+> 时常引起重绘的属性：color border-style visibility background text-decoration outline box-shadow background-size
+
+
+
+
+
 ## 几种上下文
 
 - **BFC：格式化上下文，是页面上的一个独立的渲染区域。**
@@ -357,15 +387,18 @@ clearfix {*zoom: 1;}
 
 - 原理：多张图片合成成一张单独的图片。可以减少网站的 HTTP 请求数。该图片使用 CSS background 和 background-position 属性渲染，这也就意味着标签变得更加复杂了，图片是在 CSS 中定义，而非 img 标签。
 - 优点：hover效果，如果是多个图片，网络正常的情况下首次会闪烁一下。如果是断网情况下，就没图片了。sprites 就很好的解决了这个问题（第一次就加载好了）。合并了请求数，制作帧动画方便。
-
 - 缺点：位置不好控制，有时候容易露底。。比如说30*30的按钮，图片只有12*12保不齐就漏出其他图片了。合成时候比较费时（有工具代替）。位置计算费时（有工具代替）。更新一部分的时候，需要重新加载整个图片，缓存失效。
 
-## CSS 可置换元素与不可置换元素
+
+
+## CSS 可置换元素 **
 
 - CSS 可置换元素，一般自带有固有的宽高。其展现效果不由 CSS 控制。对于其外观的渲染是独立于 CSS 的。简单来讲，对于该元素的内容，并不会收到当前文档样式影响。对于 CSS 可置换元素，需要留意的是对于其可能也是行内元素或是块级元素的可能性。
 - 行内元素是无法改变宽高的，而 img 作为一种行内元素却可以修改其宽高，就是因为 img 是一种可置换元素。
+- 典型的可替换元素：**iframe vedio embed img 。**
+- 有些元素仅在特定情况下被作为可替换元素处理，例如 **<option> <audio> <canvas><object><applet>**
 
-- 典型的可替换元素：iframe vedio embed img 。
+
 
 ## Chrome 支持 12 px 以下的文字元素
 

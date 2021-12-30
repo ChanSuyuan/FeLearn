@@ -17,26 +17,36 @@
 
 
 
+### 位运算符
+
+| 符号 | 描述 | 运算规则                                                     |
+| ---- | ---- | ------------------------------------------------------------ |
+| \|   | 或   | 两个都为0时，结果才为0                                       |
+| &    | 与   | 两个位数都为1时，结果为1                                     |
+| ^    | 异或 | 两个位数相同为0，相异为1                                     |
+| ~    | 取反 | 0变1，1变0                                                   |
+| <<   | 左移 | 各二进制全部左移若干位，高位丢弃，低位补0                    |
+| >>   | 右移 | 各二进制全部右移若干位，对无符号数，高位补0，有符号数，各编译器处理方法不同，有的补符号位，有的补0 |
 
 
-## 引用数据类型常用 Api
 
-###  forEach()   
+## 引用数据类型常用 API
+
++ forEach()   
 
 可以改变原数组，返回值为 undefined
 
-###  Map()
++ Map()
 
 会创建一个新数组，且能够有返回值
 
-### filter ()
++ filter ()
 
 会创建一个新数组
 
-### Reducer（）
-
-- Reducer 函数接受四个参数 acc 、 cur 、 idx 、 src
-- Reducer 函数还提供一个额外参数 initalValue 作为累加器的初始值。如果没有提供该参数，则将初始值默认为数组的第一个元素。	
++ reducer（）
+  + reducer 函数接受四个参数 acc 、 cur 、 idx 、 src
+  + reducer 函数还提供一个额外参数 initalValue 作为累加器的初始值。如果没有提供该参数，则将初始值默认为数组的第一个元素。	
 
 ## 数据类型检测的方式
 
@@ -272,7 +282,7 @@ function _new(fn,...args) {
 }
 ```
 
-## <script>、<script defer>、<script async> 之间的区别
+## <script> | <script defer > <script async> 之间的区别
 
 - <script> 在加载的时候是同步的，会阻塞后面代码的执行。
 
@@ -704,7 +714,7 @@ importScripts('http~.js','https~.js')
 >
 > 应用缓存: Application Cache
 
-### 应用场景:
+#### 应用场景:
 
 数学运算 / 图像 影音等文件处理 / 大数据检索 / 耗时任务
 
@@ -737,9 +747,61 @@ self.close()
 </script>
 ```
 
-## ES6 模块化与 Common.js 的区别
 
 
+## 常见问题：
 
+### 如何区别 Object 和 Array
 
+```javascript
+//  1、 通过 Object.prototype.toString()
+const obj = {name: 'zhangsan'}
+const arr = [1,2,3]
+Object.prototype.toString(obj) //  => '[object Object]'
+Object.prototype.toString(arr)  // => '[object Array]'
+// 2、 通过 Array.isArray()
+Array.isArray(arr)  // =>  true
+Array.isArray(obj) // => false
+// 3、 通过构造函数
+obj.constructor  // => Object
+arr.constructor // => Array
+// 4、 通过 instanceof	
+arr instanceof Array // => true
+obj instanceof Object // => true
+```
 
+### 类数组转为真正数组的方法
+
+```javascript
+// 1、拓展运算符
+const arr = [...arr1]
+// 2、Array.from()
+const arrTmp = Array.from(arr1)
+// 3、 apply or call
+let list = {
+    0 : 1,
+    1 : 2,
+    2 : 3,
+    length : 3
+}
+
+// apply
+let arr = [].concat.apply([],list)
+// call
+let arr = Array.prototype.slice.call(list)
+console.log(arr)
+// 4、 创建一个新的数组，然后把伪数组的内容放入。
+```
+
+### DOM 怎么添加事件
+
+```javascript
+var btn = document.getElementById('btn')
+btn.addEventListener('click',function(){
+  // .... console.log('btn is clicked')
+})
+```
+
+### 
+
+###  

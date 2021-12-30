@@ -1,5 +1,7 @@
 # 计算机网络
 
+[TOC]
+
  OSI七层模型，从下至上分为 **物理层、数据链路层、网络层、传输层、会话层、表示层、应用层**。
 
 
@@ -547,6 +549,44 @@ Access-Control-Max-Age: 86400
 
 - - **1、计算 ETag 值需要性能损耗。**
   - **2、分布式服务器存储的情况下，计算ETag的算法如果不一样，会导致浏览器从一台服务器上获得页面内容后到另外一台服务器上进行验证时现 ETag 不匹配的情况。**
+
+
+
+## Cookie 的携带问题
+
+> fetch 在默认情况下，不管是同域还是跨域 ajax 请求 都不会带上 cookie，只有当设置了 credentials 时才会带上该 ajax 请求所在域的cookie，服务端需要设置响应头 Access-Control-Allow-Credentials: true，否则浏览器会因为安全限制而报错。
+>
+> axios 和 Jquery 在同域 ajax 请求时会带上 cookie，跨域请求不会，跨域请求需要设置 withCredentials 和服务端响应头。
+
+```javascript
+// fetch
+fetch(url, {
+	credentials: "include" // include,same-origin,omit
+})
+// include 跨域ajax 带上 cookie same-origin 仅同域带上 cookie omit 任务情况都不带cookie
+// axios
+axios.get(url,{withCredentials:true})
+// jquery
+$.ajax({ method:'get', url: '', xhrFields: {withCredentials:true}})
+```
+
+### 
+
+### fetch
+
+> fetch 发送网络请求，可以传输任何数据格式。但 fetch的超时、中止取消并不方便，只能通过取消Prmoise来完成。同时对于数返回的监控项编写不友好。而且在某些浏览器，兼容性不好。
+
+#### 优缺点：
+
+>基于 Promise 对象设计，可以解决回调地狱问题。默认不带Cookie，没有办法检测请求的进度，无法取消或超时处理，编写返回值监控项不友好.
+
+### axios 
+
+#### 优缺点：
+
+> 解决回调地狱问题。自动转化为json数据类型，支持Promise，提供并发请求接口。可以通过网络请求检测进度（onUploadProgress），提供超时处理。并设计有拦截器。
+
+
 
 
 
