@@ -817,6 +817,186 @@ export function isValidElement(object) {
 
 可以看到，`$$typeof === REACT_ELEMENT_TYPE`的非`null`对象就是一个合法的`React Element`。换言之，在`React`中，所有`JSX`在运行时的返回结果（即`React.createElement()`的返回值）都是`React Element`。
 
+
+
+### React Component
+
+在`React`中，我们常使用`classComponent`与`FunctionComponent`构建组件。
+
+```jsx
+class AppClass extends React.Component {
+	render(){
+    return <p>Hello World</p>
+  }
+  console.log("这是ClassComponent",AppClass)
+	console.log("这是Element",<AppClass/>)
+              
+  function AppFunc(){
+    return <p>Hello World</p>
+  }
+
+	console.log("这是FunctionComponent,AppFunc")
+	console.log("这是Element",<AppFunc/>)
+}
+```
+
+Demo https://codesandbox.io/s/jsx-type-blpuo
+
+![image-20220105144634671](C:\Users\Csy\AppData\Roaming\Typora\typora-user-images\image-20220105144634671.png)
+
+可以看出`ClassComponent`对应的`Element`的`type`字段是`AppClass`自身。
+
+`FunctionComponent`对应的`Element`的`type`字段是 `AppFunc`自身，如下所示:
+
+```js
+{
+  $$typeof: Symbol(react.element),
+  key: null,
+  props: {},
+  ref: null,
+  type: ƒ AppFunc(),
+  _owner: null,
+  _store: {validated: false},
+  _self: null,
+  _source: null 
+}
+```
+
+但是需要注意的是，`AppClass instanceof Function === true` `AppFunc instanceof Function === true`，所以无法通过引用类型来区分`ClassComponent`和`FunctionComponent`。`React`通过`ClassComponent`实例原型上的`isReactComponent`变量判断是否为`ClassComponent`。
+
+`ClassComponent.prototype.isReactComponent = {}`如果是ReactComponent则返回了{}。需要注意的是方法组件不存在原型链概念。
+
+
+
+### JSX与Fiber节点
+
+`JSX`是一种描述当前组件内容的数据结构，他不包含组件`schedule`、`reconcile`、`render`所需的相关信息。
+
+比如以下信息就不包括在`JSX`中：
+
++ 组件在更新中的**优先级**
++ 组件的 `state`
++ 组件被打上的用于 `Renderer`的**标记**
+
+这些内容都包含在`Fiber节点`中。
+
+所以，在组件`mount`时，`Reconciler`根据`JSX`描述的组件内容生成组件对应的`Fiber节点`。
+
+在`update`时，`Reconciler`将`JSX`与`Fiber节点`保存的数据对比，生成组件对应的`Fiber节点`，并根据对比结果为`Fiber节点`打上`标记`。
+
+## Render阶段
+
+### 流程
+
+`render阶段`开始于`performSyncWorkOnRoot`或`performConcurrentWorkOnRoot`方法的调用。这取决于本次更新是同步还是异步更新。
+
+```js
+// performSyncWorkOnRoot会调用该方法
+function workLoopSync() {
+  while (workInProgress !== null) {
+    performUnitOfWork(workInProgress);
+  }
+}
+
+// performConcurrentWorkOnRoot会调用该方法
+function workLoopConcurrent() {
+  while (workInProgress !== null && !shouldYield()) {
+    performUnitOfWork(workInProgress);
+  }
+}
+```
+
+可以看出，他们之间唯一的区别就是是否调用`shouldYield()`。如果当前浏览器帧没有剩余时间，`shouldYield`会中止循环，知道浏览器有空闲时间后再继续遍历。
+
+`workInProgress`代表当前以及建立的`workInProgress Fiber`。
+
+`performUnitOfWork`方法会创建下一个`Fiber节点`并赋值给`workInProgress`，并将`workInProgress`与已创建的`Fiber节点`连接起来构建`Fiber树`。
+
+我们知道`Fiber Reconciler`是从`Stack Reconciler`重构而来，通过遍历的方式实现可中断的递归，所以`performUnitOfWork`的工作可以分为:**递和归**
+
+#### “递”阶段
+
+首先从`rootFiber`开始向下**深度优先遍历**。为遍历到的每个`Fiber节点`调用**beginWork方法**。该方法会根据传入的`Fiber节点`创建`子Fiber节点`，并将这两个`Fiber节点`连接起来。当遍历到叶子节点（即没有子组件的组件）时就会进入“归”阶段。
+
+#### “归”阶段
+
+在“归”阶段会调用**completeWork**处理`Fiber节点`。
+
+当某个`Fiber节点`执行完`completeWork`，如果其存在`兄弟Fiber节点`(即`fiber.sibling !== null`)，会进入其`兄弟Fiber`的“递”阶段。
+
+如果不存在`兄弟Fiber`，会进入`父级Fiber`的“归”阶段。
+
+“递”和“归”阶段会交错执行直到“归”到`rootFiber`。至此，`render阶段`的工作就结束了。
+
+### [#](https://react.iamkasong.com/process/reconciler.html#例子)例子
+
+以上一节的例子举例：
+
+```js
+function App() {
+  return (
+    <div>
+      i am
+      <span>KaSong</span>
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+对应的`Fiber树`结构： ![Fiber架构](https://react.iamkasong.com/img/fiber.png)
+
+`render阶段`会依次执行：
+
+```sh
+1. rootFiber beginWork
+2. App Fiber beginWork
+3. div Fiber beginWork
+4. "i am" Fiber beginWork
+5. "i am" Fiber completeWork
+6. span Fiber beginWork
+7. span Fiber completeWork
+8. div Fiber completeWork
+9. App Fiber completeWork
+10. rootFiber completeWork
+```
+
+>注意
+>
+>之所以没有 “KaSong” Fiber 的 beginWork/completeWork，是因为作为一种性能优化手段，针对只有单一文本子节点的`Fiber`，`React`会特殊处理。
+
+
+
+## BeginWork 方法(Render阶段)
+
+`beginWork`的工作是传入`当前Fiber节点`，创建`子Fiber节点`。
+
+### 从传参看方法执行
+
+```js
+function beginWork (
+	current:Fiber | null,
+  workInProgress: Fiber,
+  renderLanes:Lanes,
+): Fiber | null {
+}
+```
+
+其中传参：
+
++ current: 当前组件对应的`Fiber节点`在上一次更新时的`Fiber节点`，即`workInProgress.alternate`
+
+## React && Vue
+
+以下来自于 Vue 官方文档
+
+React 和 Vue 有许多相似之处，它们的共同点：
+
++ 都是使用 Virtual DOM
++ 提供了响应式(Reactive)和组件化(Composable)的视图组件。
++ 将注意力集中保持在核心库，而将其他功能如路由和全局状态管理交给相关的库。
+
 ## React Hooks
 
 - **Function Component 不存在生命周期概念，但可以模拟生命周期行为。**
